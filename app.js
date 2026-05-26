@@ -1,21 +1,27 @@
-const stages = ["插秧期", "分蘖期", "拔节期", "抽穗期", "成熟收割期"];
+const stages = [
+  { name: "插秧期", image: "assets/images/rice-stages/transplanting.png" },
+  { name: "分蘖期", image: "assets/images/rice-stages/tillering.png" },
+  { name: "拔节期", image: "assets/images/rice-stages/jointing.png" },
+  { name: "抽穗期", image: "assets/images/rice-stages/heading.png" },
+  { name: "成熟收割期", image: "assets/images/rice-stages/mature.png" }
+];
 
 const tools = [
-  { id: "insecticide-sprayer", name: "喷雾器（驱虫药液）" },
-  { id: "net", name: "捕虫网" },
-  { id: "sticky-board", name: "粘虫板" },
-  { id: "fungicide-sprayer", name: "杀菌喷雾器" },
-  { id: "rake", name: "除草耙" },
-  { id: "disease-shovel", name: "病害清理铲" }
+  { id: "insecticide-sprayer", name: "喷雾器（驱虫药液）", image: "assets/images/tools/insecticide-sprayer.png" },
+  { id: "net", name: "捕虫网", image: "assets/images/tools/net.png" },
+  { id: "sticky-board", name: "粘虫板", image: "assets/images/tools/sticky-board.png" },
+  { id: "fungicide-sprayer", name: "杀菌喷雾器", image: "assets/images/tools/fungicide-sprayer.png" },
+  { id: "rake", name: "除草耙", image: "assets/images/tools/rake.png" },
+  { id: "disease-shovel", name: "病害清理铲", image: "assets/images/tools/disease-shovel.png" }
 ];
 
 const pests = [
-  { id: "planthopper", name: "稻飞虱", toolId: "insecticide-sprayer" },
-  { id: "borer", name: "稻螟虫", toolId: "net" },
-  { id: "leafhopper", name: "稻叶蝉", toolId: "sticky-board" },
-  { id: "blast", name: "稻瘟病", toolId: "fungicide-sprayer" },
-  { id: "sheath-blight", name: "纹枯病", toolId: "rake" },
-  { id: "false-smut", name: "稻曲病", toolId: "disease-shovel" }
+  { id: "planthopper", name: "稻飞虱", toolId: "insecticide-sprayer", image: "assets/images/pests/planthopper.png" },
+  { id: "borer", name: "稻螟虫", toolId: "net", image: "assets/images/pests/borer.png" },
+  { id: "leafhopper", name: "稻叶蝉", toolId: "sticky-board", image: "assets/images/pests/leafhopper.png" },
+  { id: "blast", name: "稻瘟病", toolId: "fungicide-sprayer", image: "assets/images/pests/blast.png" },
+  { id: "sheath-blight", name: "纹枯病", toolId: "rake", image: "assets/images/pests/sheath-blight.png" },
+  { id: "false-smut", name: "稻曲病", toolId: "disease-shovel", image: "assets/images/pests/false-smut.png" }
 ];
 
 const positions = [
@@ -33,6 +39,7 @@ let clearedPests = [];
 const stageList = document.querySelector("#stageList");
 const toolList = document.querySelector("#toolList");
 const pestLayer = document.querySelector("#pestLayer");
+const fieldPhoto = document.querySelector(".field-photo");
 const message = document.querySelector("#message");
 const winDialog = document.querySelector("#winDialog");
 const resultList = document.querySelector("#resultList");
@@ -48,10 +55,13 @@ function pickRoundPests() {
 function renderStages() {
   const clearedCount = clearedPests.length;
   const activeStageIndex = Math.min(clearedCount + 1, stages.length - 1);
+  const activeStage = stages[activeStageIndex];
 
   stageList.innerHTML = stages
-    .map((stage, index) => `<li class="${index === activeStageIndex ? "active" : ""}">${stage}</li>`)
+    .map((stage, index) => `<li class="${index === activeStageIndex ? "active" : ""}">${stage.name}</li>`)
     .join("");
+
+  fieldPhoto.style.backgroundImage = `url("${activeStage.image}")`;
 }
 
 function renderTools() {
@@ -59,7 +69,7 @@ function renderTools() {
     .map(
       (tool) => `
         <button class="tool-button ${tool.id === selectedToolId ? "selected" : ""}" type="button" data-tool-id="${tool.id}">
-          <span class="tool-photo" aria-hidden="true"></span>
+          <img class="tool-photo" src="${tool.image}" alt="" aria-hidden="true" />
           <span>${tool.name}</span>
         </button>
       `
@@ -82,7 +92,7 @@ function renderPests() {
       (pest) => `
         <div class="pest" style="left:${pest.position.left}; top:${pest.position.top}">
           <button type="button" data-pest-id="${pest.id}">
-            <span class="photo" aria-hidden="true"></span>
+            <img class="photo" src="${pest.image}" alt="" aria-hidden="true" />
             <span class="name">${pest.name}</span>
           </button>
         </div>
@@ -148,4 +158,3 @@ restartButton.addEventListener("click", () => {
 });
 
 startGame();
-

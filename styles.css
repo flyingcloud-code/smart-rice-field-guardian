@@ -80,42 +80,16 @@ button {
 }
 
 .guardian {
-  position: relative;
-  width: 104px;
-  height: 174px;
+  width: 132px;
+  min-height: 174px;
   margin: 8px auto 0;
 }
 
-.hat {
-  position: absolute;
-  left: 14px;
-  top: 0;
-  width: 76px;
-  height: 28px;
-  background: #d8bd64;
-  border-radius: 50% 50% 40% 40%;
-}
-
-.face {
-  position: absolute;
-  left: 28px;
-  top: 24px;
-  width: 48px;
-  height: 52px;
-  background: #ffd8b5;
-  border-radius: 50%;
-  border: 2px solid #5c4a37;
-}
-
-.body {
-  position: absolute;
-  left: 20px;
-  top: 78px;
-  width: 64px;
-  height: 86px;
-  background: #4f8f63;
-  border-radius: 16px 16px 10px 10px;
-  border: 2px solid #244c33;
+.guardian img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
 .message {
@@ -140,9 +114,9 @@ button {
 .field-photo {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgba(166, 209, 238, 0.9), rgba(166, 209, 238, 0.1) 32%),
-    linear-gradient(135deg, #668f42 0 18%, #9aba50 18% 28%, #5f8739 28% 44%, #b5c766 44% 55%, #6f9142 55% 70%, #bdd07a 70% 100%);
+  background-position: center;
+  background-size: cover;
+  transition: background-image 240ms ease;
 }
 
 .pest-layer {
@@ -172,11 +146,11 @@ button {
 
 .pest .photo {
   display: block;
-  width: 58px;
-  height: 38px;
+  width: 62px;
+  height: 44px;
   margin: 8px auto 4px;
   border-radius: 6px;
-  background: #8b5f38;
+  object-fit: cover;
 }
 
 .pest .name {
@@ -229,7 +203,8 @@ button {
   width: 58px;
   height: 58px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #f2f2f2, #b8c2b2);
+  object-fit: contain;
+  background: #fff;
 }
 
 .win-dialog {
@@ -270,4 +245,3 @@ button {
     min-height: 420px;
   }
 }
-
