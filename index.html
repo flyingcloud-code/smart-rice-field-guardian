@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>守护智慧稻田</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="stage-bar" aria-label="水稻生长阶段">
+        <h1>守护智慧稻田</h1>
+        <ol id="stageList" class="stage-list"></ol>
+      </header>
+
+      <section class="play-area" aria-label="游戏区域">
+        <aside class="guardian-panel">
+          <div class="guardian" aria-label="稻田守护员">
+            <div class="hat"></div>
+            <div class="face"></div>
+            <div class="body"></div>
+          </div>
+          <p id="message" class="message">先选择一个工具，再点击稻田里的病虫害。</p>
+        </aside>
+
+        <section id="field" class="field" aria-label="实景稻田区域">
+          <div class="field-photo"></div>
+          <div id="pestLayer" class="pest-layer"></div>
+        </section>
+
+        <aside class="tool-panel" aria-label="防治工具栏">
+          <h2>防治工具</h2>
+          <div id="toolList" class="tool-list"></div>
+        </aside>
+      </section>
+
+      <dialog id="winDialog" class="win-dialog">
+        <h2>守护成功！</h2>
+        <p>你帮助稻田清除了 3 种病虫害。</p>
+        <ul id="resultList"></ul>
+        <button id="restartButton" type="button">再玩一次</button>
+      </dialog>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
+

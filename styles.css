@@ -1,0 +1,273 @@
+:root {
+  color: #1f2a1f;
+  background: #eef3ec;
+  font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button {
+  font: inherit;
+}
+
+.game-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.stage-bar {
+  padding: 16px 24px;
+  background: #f8faf6;
+  border-bottom: 1px solid #d7e0d2;
+}
+
+.stage-bar h1 {
+  margin: 0 0 12px;
+  font-size: clamp(24px, 3vw, 36px);
+}
+
+.stage-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.stage-list li {
+  min-height: 44px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #dde8d6;
+  text-align: center;
+  font-weight: 700;
+}
+
+.stage-list li.active {
+  background: #2f7d32;
+  color: #fff;
+}
+
+.play-area {
+  display: grid;
+  grid-template-columns: 190px minmax(420px, 1fr) 220px;
+  gap: 16px;
+  padding: 16px;
+  min-height: 0;
+}
+
+.guardian-panel,
+.tool-panel {
+  background: #f8faf6;
+  border: 1px solid #d7e0d2;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.guardian-panel {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.guardian {
+  position: relative;
+  width: 104px;
+  height: 174px;
+  margin: 8px auto 0;
+}
+
+.hat {
+  position: absolute;
+  left: 14px;
+  top: 0;
+  width: 76px;
+  height: 28px;
+  background: #d8bd64;
+  border-radius: 50% 50% 40% 40%;
+}
+
+.face {
+  position: absolute;
+  left: 28px;
+  top: 24px;
+  width: 48px;
+  height: 52px;
+  background: #ffd8b5;
+  border-radius: 50%;
+  border: 2px solid #5c4a37;
+}
+
+.body {
+  position: absolute;
+  left: 20px;
+  top: 78px;
+  width: 64px;
+  height: 86px;
+  background: #4f8f63;
+  border-radius: 16px 16px 10px 10px;
+  border: 2px solid #244c33;
+}
+
+.message {
+  min-height: 82px;
+  padding: 12px;
+  margin: 0;
+  border-radius: 8px;
+  background: #fff;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.field {
+  position: relative;
+  overflow: hidden;
+  min-height: 560px;
+  border-radius: 8px;
+  border: 1px solid #b8cdb0;
+  background: #dbe6c9;
+}
+
+.field-photo {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(166, 209, 238, 0.9), rgba(166, 209, 238, 0.1) 32%),
+    linear-gradient(135deg, #668f42 0 18%, #9aba50 18% 28%, #5f8739 28% 44%, #b5c766 44% 55%, #6f9142 55% 70%, #bdd07a 70% 100%);
+}
+
+.pest-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.pest {
+  position: absolute;
+  width: 112px;
+  min-height: 88px;
+  border: 3px solid #f7d24b;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 22px rgba(31, 42, 31, 0.22);
+  animation: hint 1.4s ease-in-out infinite;
+}
+
+.pest button {
+  width: 100%;
+  min-height: 88px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: #1f2a1f;
+}
+
+.pest .photo {
+  display: block;
+  width: 58px;
+  height: 38px;
+  margin: 8px auto 4px;
+  border-radius: 6px;
+  background: #8b5f38;
+}
+
+.pest .name {
+  display: block;
+  padding: 0 6px 8px;
+  font-weight: 800;
+}
+
+@keyframes hint {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.tool-panel h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.tool-list {
+  display: grid;
+  gap: 10px;
+}
+
+.tool-button {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  align-items: center;
+  gap: 10px;
+  min-height: 76px;
+  padding: 8px;
+  border: 2px solid #cbd8c4;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  font-weight: 800;
+}
+
+.tool-button.selected {
+  border-color: #2f7d32;
+  background: #e7f4df;
+}
+
+.tool-photo {
+  width: 58px;
+  height: 58px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f2f2f2, #b8c2b2);
+}
+
+.win-dialog {
+  width: min(480px, calc(100vw - 32px));
+  border: 0;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.win-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.42);
+}
+
+.win-dialog h2 {
+  margin-top: 0;
+}
+
+.win-dialog button {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #2f7d32;
+  color: #fff;
+  font-weight: 800;
+}
+
+@media (max-width: 860px) {
+  .play-area {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .field {
+    min-height: 420px;
+  }
+}
+
