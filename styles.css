@@ -48,7 +48,7 @@ button {
 }
 
 .mode-toggle button,
-.stage-choice {
+.stage-list button {
   min-height: 42px;
   padding: 0 14px;
   border: 2px solid #cbd8c4;
@@ -59,8 +59,7 @@ button {
   font-weight: 800;
 }
 
-.mode-toggle button.selected,
-.stage-choice.selected {
+.mode-toggle button.selected {
   border-color: #2f7d32;
   background: #2f7d32;
   color: #fff;
@@ -77,33 +76,33 @@ button {
 
 .stage-list li {
   min-height: 44px;
-  padding: 10px;
+  padding: 0;
   border-radius: 8px;
   background: #dde8d6;
   text-align: center;
   font-weight: 700;
 }
 
-.stage-list li.active {
+.stage-list button {
+  width: 100%;
+  height: 100%;
+  min-height: 44px;
+}
+
+.stage-list li.active button {
+  border-color: #2f7d32;
   background: #2f7d32;
   color: #fff;
 }
 
-.stage-list li.complete {
+.stage-list li.complete button {
   background: #d7ead0;
   color: #24592d;
 }
 
-.stage-list li.active.complete {
+.stage-list li.active.complete button {
   background: #2f7d32;
   color: #fff;
-}
-
-.stage-picker {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 10px;
 }
 
 .play-area {
@@ -112,6 +111,13 @@ button {
   gap: 16px;
   padding: 16px;
   min-height: 0;
+}
+
+.field-column {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+  min-width: 0;
 }
 
 .guardian-panel,
@@ -182,15 +188,11 @@ button {
 }
 
 .stage-card {
-  position: absolute;
-  left: 16px;
-  top: 16px;
-  z-index: 2;
-  width: min(360px, calc(100% - 32px));
+  width: 100%;
   padding: 12px 14px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 8px 22px rgba(31, 42, 31, 0.18);
+  background: #fff;
+  border: 1px solid #d7e0d2;
 }
 
 .stage-card h2 {
@@ -211,8 +213,8 @@ button {
 
 .pest {
   position: absolute;
-  width: 112px;
-  min-height: 88px;
+  width: 108px;
+  min-height: 86px;
   border: 3px solid #f7d24b;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.9);
@@ -231,11 +233,21 @@ button {
 
 .pest .photo {
   display: block;
-  width: 62px;
-  height: 44px;
+  width: 58px;
+  height: 40px;
   margin: 8px auto 4px;
   border-radius: 6px;
   object-fit: cover;
+}
+
+.pest.success {
+  animation: clear-success 520ms ease-out forwards;
+}
+
+.pest.fail {
+  animation: wrong-tool 520ms ease-in-out;
+  border-color: #d32f2f;
+  box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.18), 0 8px 28px rgba(211, 47, 47, 0.55);
 }
 
 .pest .name {
@@ -253,6 +265,44 @@ button {
   50% {
     border-color: #fff176;
     box-shadow: 0 8px 28px rgba(247, 210, 75, 0.7);
+  }
+}
+
+@keyframes clear-success {
+  0% {
+    transform: scale(1);
+    border-color: #f7d24b;
+    box-shadow: 0 8px 22px rgba(31, 42, 31, 0.22);
+    opacity: 1;
+  }
+  55% {
+    transform: scale(1.08);
+    border-color: #53c45c;
+    box-shadow: 0 0 0 8px rgba(83, 196, 92, 0.25), 0 8px 34px rgba(83, 196, 92, 0.75);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.2);
+    border-color: #53c45c;
+    box-shadow: 0 0 0 12px rgba(83, 196, 92, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes wrong-tool {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15%,
+  45%,
+  75% {
+    transform: translateX(-8px);
+  }
+  30%,
+  60%,
+  90% {
+    transform: translateX(8px);
   }
 }
 
@@ -341,8 +391,7 @@ button {
     display: grid;
   }
 
-  .stage-list,
-  .stage-picker {
+  .stage-list {
     grid-template-columns: 1fr;
   }
 

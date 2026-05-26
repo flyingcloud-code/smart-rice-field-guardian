@@ -27,46 +27,49 @@ const stages = [
     name: "插秧期",
     image: "assets/images/rice-stages/transplanting.png",
     summary: "小秧苗刚进入水田，重点观察嫩叶和幼苗受害。",
-    pestIds: ["thrips", "planthopper", "water-weevil", "borer", "blast"]
+    pestIds: ["thrips", "water-weevil", "planthopper", "borer", "blast"]
   },
   {
     id: "tillering",
     name: "分蘖期",
     image: "assets/images/rice-stages/tillering.png",
     summary: "秧苗分枝变密，虫害和叶部病害更容易出现。",
-    pestIds: ["planthopper", "leaf-folder", "borer", "sheath-blight", "blast", "leafhopper"]
+    pestIds: ["leaf-folder", "leafhopper", "planthopper", "sheath-blight", "borer"]
   },
   {
     id: "jointing",
     name: "拔节期",
     image: "assets/images/rice-stages/jointing.png",
     summary: "稻秆快速长高，重点保护茎秆和叶片。",
-    pestIds: ["sheath-blight", "planthopper", "leaf-folder", "borer", "blast", "bacterial-blight"]
+    pestIds: ["sheath-blight", "bacterial-blight", "leaf-folder", "borer", "blast"]
   },
   {
     id: "heading",
     name: "抽穗期",
     image: "assets/images/rice-stages/heading.png",
     summary: "稻穗开始形成，重点保护稻穗和上部叶片。",
-    pestIds: ["neck-blast", "false-smut", "sheath-blight", "planthopper", "leaf-folder", "borer", "bacterial-blight"]
+    pestIds: ["neck-blast", "false-smut", "sheath-blight", "leaf-folder", "bacterial-blight"]
   },
   {
     id: "mature",
     name: "成熟收割期",
     image: "assets/images/rice-stages/mature.png",
     summary: "稻谷成熟前，重点保护产量和稻穗品质。",
-    pestIds: ["planthopper", "false-smut", "neck-blast", "sheath-blight", "leaf-folder", "borer"]
+    pestIds: ["false-smut", "neck-blast", "planthopper", "sheath-blight", "borer"]
   }
 ];
 
 const positions = [
-  { left: "20%", top: "26%" },
-  { left: "48%", top: "39%" },
-  { left: "70%", top: "58%" }
+  { left: "14%", top: "18%" },
+  { left: "42%", top: "20%" },
+  { left: "70%", top: "18%" },
+  { left: "26%", top: "58%" },
+  { left: "62%", top: "58%" }
 ];
 
 const maxAttempts = 4;
 const targetClears = 3;
+const pestCount = 5;
 
 let mode = "auto";
 let selectedToolId = null;
@@ -76,10 +79,10 @@ let clearedPests = [];
 let completedStageIds = new Set();
 let attempts = 0;
 let roundClosed = false;
+let feedbackLocked = false;
 
 const modeButtons = document.querySelectorAll("[data-mode]");
 const stageList = document.querySelector("#stageList");
-const stagePicker = document.querySelector("#stagePicker");
 const toolList = document.querySelector("#toolList");
 const pestLayer = document.querySelector("#pestLayer");
 const fieldPhoto = document.querySelector(".field-photo");
@@ -109,9 +112,35 @@ function getTool(toolId) {
 }
 
 function pickStagePests(stage) {
-  return shuffle(stage.pestIds)
-    .slice(0, targetClears)
+  return stage.pestIds
+    .slice(0, pestCount)
     .map((pestId, index) => ({ ...pests[pestId], position: positions[index] }));
+}
+
+function playTone(type) {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+
+  const context = new AudioContext();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const now = context.currentTime;
+  const settings = {
+    tool: { frequency: 520, duration: 0.07, type: "sine", volume: 0.035 },
+    success: { frequency: 760, duration: 0.16, type: "triangle", volume: 0.055 },
+    fail: { frequency: 180, duration: 0.18, type: "sawtooth", volume: 0.035 }
+  }[type];
+
+  oscillator.type = settings.type;
+  oscillator.frequency.setValueAtTime(settings.frequency, now);
+  if (type === "success") oscillator.frequency.exponentialRampToValueAtTime(1040, now + settings.duration);
+  if (type === "fail") oscillator.frequency.exponentialRampToValueAtTime(120, now + settings.duration);
+  gain.gain.setValueAtTime(settings.volume, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + settings.duration);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + settings.duration);
+  oscillator.onended = () => context.close();
 }
 
 function setMode(nextMode) {
@@ -134,14 +163,14 @@ function startStage(stageIndex) {
   clearedPests = [];
   attempts = 0;
   roundClosed = false;
+  feedbackLocked = false;
   activePests = pickStagePests(getCurrentStage());
-  message.textContent = "先选择一个工具，再点击稻田里的病虫害。4 次尝试内完成 3 个任务即可过关。";
+  message.textContent = "先选择一个工具，再点击稻田里的病虫害。5 个目标里，4 次尝试内完成 3 个即可过关。";
   renderAll();
 }
 
 function renderAll() {
   renderStages();
-  renderStagePicker();
   renderStageInfo();
   renderTools();
   renderPests();
@@ -157,23 +186,17 @@ function renderStages() {
       ]
         .filter(Boolean)
         .join(" ");
-      return `<li class="${classes}">${index + 1}. ${stage.name}</li>`;
+      return `
+        <li class="${classes}">
+          <button type="button" data-stage-index="${index}">
+            ${index + 1}. ${stage.name}
+          </button>
+        </li>
+      `;
     })
     .join("");
-}
 
-function renderStagePicker() {
-  stagePicker.innerHTML = stages
-    .map(
-      (stage, index) => `
-        <button class="stage-choice ${index === currentStageIndex ? "selected" : ""}" type="button" data-stage-index="${index}">
-          ${stage.name}
-        </button>
-      `
-    )
-    .join("");
-
-  stagePicker.querySelectorAll("button").forEach((button) => {
+  stageList.querySelectorAll("button").forEach((button) => {
     button.addEventListener("click", () => {
       mode = "manual";
       modeButtons.forEach((modeButton) => modeButton.classList.toggle("selected", modeButton.dataset.mode === mode));
@@ -209,6 +232,7 @@ function renderTools() {
 
   toolList.querySelectorAll("button").forEach((button) => {
     button.addEventListener("click", () => {
+      playTone("tool");
       selectedToolId = button.dataset.toolId;
       const tool = getTool(selectedToolId);
       message.textContent = `已选择：${tool.name}。现在点击稻田里的病虫害。`;
@@ -221,7 +245,7 @@ function renderPests() {
   pestLayer.innerHTML = activePests
     .map(
       (pest) => `
-        <div class="pest" style="left:${pest.position.left}; top:${pest.position.top}">
+        <div class="pest" data-pest-card="${pest.id}" style="left:${pest.position.left}; top:${pest.position.top}">
           <button type="button" data-pest-id="${pest.id}" ${roundClosed ? "disabled" : ""}>
             <img class="photo" src="${pest.image}" alt="" aria-hidden="true" />
             <span class="name">${pest.name}</span>
@@ -237,7 +261,7 @@ function renderPests() {
 }
 
 function handlePestClick(pestId) {
-  if (roundClosed) return;
+  if (roundClosed || feedbackLocked) return;
 
   const pest = activePests.find((item) => item.id === pestId);
   if (!pest) return;
@@ -252,26 +276,46 @@ function handlePestClick(pestId) {
   if (selectedToolId !== pest.toolId) {
     selectedToolId = null;
     message.textContent = "工具不对，请重新选择";
+    showPestFeedback(pestId, "fail");
+    playTone("fail");
     renderTools();
     renderStats();
-    if (attempts >= maxAttempts) showStageFailed();
+    feedbackLocked = true;
+    window.setTimeout(() => {
+      feedbackLocked = false;
+      if (attempts >= maxAttempts) showStageFailed();
+    }, 520);
     return;
   }
 
-  activePests = activePests.filter((item) => item.id !== pestId);
   clearedPests.push(pest);
   selectedToolId = null;
+  showPestFeedback(pestId, "success");
+  playTone("success");
   message.textContent = `成功清除了${pest.name}！`;
 
   renderTools();
-  renderPests();
   renderStats();
+  feedbackLocked = true;
 
-  if (clearedPests.length === targetClears) {
-    showStageCompleted();
-  } else if (attempts >= maxAttempts) {
-    showStageFailed();
-  }
+  window.setTimeout(() => {
+    activePests = activePests.filter((item) => item.id !== pestId);
+    feedbackLocked = false;
+    renderPests();
+
+    if (clearedPests.length === targetClears) {
+      showStageCompleted();
+    } else if (attempts >= maxAttempts) {
+      showStageFailed();
+    }
+  }, 520);
+}
+
+function showPestFeedback(pestId, type) {
+  const pestCard = document.querySelector(`[data-pest-card="${pestId}"]`);
+  if (!pestCard) return;
+  pestCard.classList.remove("success", "fail");
+  pestCard.classList.add(type);
 }
 
 function showStageCompleted() {

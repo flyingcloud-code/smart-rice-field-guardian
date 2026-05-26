@@ -16,8 +16,7 @@
             <button type="button" data-mode="manual">手动选关</button>
           </div>
         </div>
-        <ol id="stageList" class="stage-list"></ol>
-        <div id="stagePicker" class="stage-picker" aria-label="关卡选择"></div>
+        <ol id="stageList" class="stage-list" aria-label="阶段状态与选关"></ol>
       </header>
 
       <section class="play-area" aria-label="游戏区域">
@@ -33,13 +32,15 @@
           </div>
         </aside>
 
-        <section id="field" class="field" aria-label="实景稻田区域">
-          <div class="field-photo"></div>
-          <div class="stage-card">
+        <section class="field-column">
+          <section class="stage-card" aria-label="当前阶段说明">
             <h2 id="stageTitle">插秧期关卡</h2>
             <p id="stageSummary">小秧苗刚进入水田，重点观察嫩叶和幼苗受害。</p>
-          </div>
-          <div id="pestLayer" class="pest-layer"></div>
+          </section>
+          <section id="field" class="field" aria-label="实景稻田区域">
+            <div class="field-photo"></div>
+            <div id="pestLayer" class="pest-layer"></div>
+          </section>
         </section>
 
         <aside class="tool-panel" aria-label="防治工具栏">
