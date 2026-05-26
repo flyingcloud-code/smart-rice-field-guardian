@@ -9,7 +9,7 @@
 - 游戏设计文档：[docs/DESIGN.md](docs/DESIGN.md)
 - 游戏资产清单：[docs/ASSETS.md](docs/ASSETS.md)
 - 静态网页项目骨架：`index.html`、`styles.css`、`app.js`
-- 18 张游戏图片资产：5 张水稻阶段背景、6 张病虫害、6 张工具、1 张守护员角色
+- 23 张游戏图片资产：5 张水稻阶段背景、11 张病虫害、6 张工具、1 张守护员角色
 - 可本地预览的第一版交互壳
 
 ## 本地运行

@@ -4,10 +4,10 @@ Generated on 2026-05-26 with the built-in image generation tool.
 
 ## Count
 
-Total generated assets: 18
+Total generated assets: 23
 
 - Rice growth stage backgrounds: 5
-- Pest and disease images: 6
+- Pest and disease images: 11
 - Tool images: 6
 - Guardian character: 1
 
@@ -28,10 +28,15 @@ Total generated assets: 18
 | Name | File |
 |---|---|
 | 稻飞虱 | `assets/images/pests/planthopper.png` |
+| 稻蓟马 | `assets/images/pests/thrips.png` |
+| 稻水象甲 | `assets/images/pests/water-weevil.png` |
 | 稻螟虫 | `assets/images/pests/borer.png` |
 | 稻叶蝉 | `assets/images/pests/leafhopper.png` |
+| 稻纵卷叶螟 | `assets/images/pests/leaf-folder.png` |
 | 稻瘟病 | `assets/images/pests/blast.png` |
+| 穗颈瘟 | `assets/images/pests/neck-blast.png` |
 | 纹枯病 | `assets/images/pests/sheath-blight.png` |
+| 白叶枯病 | `assets/images/pests/bacterial-blight.png` |
 | 稻曲病 | `assets/images/pests/false-smut.png` |
 
 ### Tools
@@ -50,4 +55,3 @@ Total generated assets: 18
 | Name | File |
 |---|---|
 | 稻田守护员 | `assets/images/characters/guardian.png` |
-
