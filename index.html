@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>小稻农探秘营</title>
+    <title>小稻农探秘营 - 守护智慧稻田</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="game-shell">
       <header class="stage-bar" aria-label="水稻生长阶段">
         <div class="title-row">
-          <h1>小稻农探秘营</h1>
+          <h1>小稻农探秘营 - 守护智慧稻田</h1>
         </div>
         <ol id="stageList" class="stage-list" aria-label="阶段状态与选关"></ol>
       </header>
@@ -22,6 +22,10 @@
             <img src="assets/images/characters/guardian.png" alt="稻田守护员" />
           </div>
           <button id="settingsToggle" class="settings-toggle" type="button" aria-expanded="false">设置</button>
+          <button id="soundToggle" class="sound-toggle" type="button" aria-pressed="true">
+            <img id="soundIcon" src="assets/images/icons/speaker-on.svg" alt="" aria-hidden="true" />
+            <span id="soundLabel">欢迎语音开</span>
+          </button>
           <section id="settingsPanel" class="settings-panel" hidden>
             <div class="mode-toggle" aria-label="关卡模式">
               <button class="selected" type="button" data-mode="auto">自动模式</button>
@@ -39,10 +43,6 @@
               <label for="speedSlider">移动速度 <strong id="speedValue">5</strong></label>
               <input id="speedSlider" type="range" min="1" max="10" value="5" step="1" />
             </div>
-            <button id="soundToggle" class="sound-toggle" type="button" aria-pressed="true">
-              <img id="soundIcon" src="assets/images/icons/speaker-on.svg" alt="" aria-hidden="true" />
-              <span id="soundLabel">声音开</span>
-            </button>
           </section>
           <p id="message" class="message">先选择一个工具，再点击稻田里的病虫害。</p>
           <div class="stats" aria-label="本关进度">

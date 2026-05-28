@@ -294,7 +294,6 @@ function pickStagePests(stage) {
 }
 
 function playSound(type) {
-  if (!soundEnabled) return;
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
@@ -465,7 +464,7 @@ function renderSoundState() {
   soundToggle.setAttribute("aria-pressed", String(soundEnabled));
   soundToggle.classList.toggle("selected", soundEnabled);
   soundIcon.src = soundEnabled ? "assets/images/icons/speaker-on.svg" : "assets/images/icons/speaker-off.svg";
-  soundLabel.textContent = soundEnabled ? "声音开" : "声音关";
+  soundLabel.textContent = soundEnabled ? "欢迎语音开" : "欢迎语音关";
   welcomeAudio.muted = !soundEnabled;
   if (soundEnabled) {
     playWelcomeAudio();
