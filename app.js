@@ -47,6 +47,7 @@ const pests = {
   thrips: {
     id: "thrips",
     name: "稻蓟马",
+    pinyin: "dào jì mǎ",
     toolId: "sticky-board",
     image: "assets/images/pests/thrips.png",
     intro: "稻蓟马喜欢吸食嫩叶汁液，幼苗叶片会出现发白、卷曲或长得慢。",
@@ -55,6 +56,7 @@ const pests = {
   planthopper: {
     id: "planthopper",
     name: "稻飞虱",
+    pinyin: "dào fēi shī",
     toolId: "insecticide-sprayer",
     image: "assets/images/pests/planthopper.png",
     intro: "稻飞虱常聚在稻株下部吸汁，数量多时会让稻株变黄、变弱。",
@@ -63,6 +65,7 @@ const pests = {
   "water-weevil": {
     id: "water-weevil",
     name: "稻水象甲",
+    pinyin: "dào shuǐ xiàng jiǎ",
     toolId: "net",
     image: "assets/images/pests/water-weevil.png",
     intro: "稻水象甲会啃食嫩叶，幼虫还会伤害稻根，让秧苗长势变差。",
@@ -71,6 +74,7 @@ const pests = {
   borer: {
     id: "borer",
     name: "稻螟虫",
+    pinyin: "dào míng chóng",
     toolId: "net",
     image: "assets/images/pests/borer.png",
     intro: "稻螟虫幼虫会钻进稻秆里取食，可能造成枯心苗或白穗。",
@@ -79,6 +83,7 @@ const pests = {
   blast: {
     id: "blast",
     name: "稻瘟病",
+    pinyin: "dào wēn bìng",
     toolId: "fungicide-sprayer",
     image: "assets/images/pests/blast.png",
     intro: "稻瘟病常在叶片上形成梭形病斑，严重时会影响稻株生长。",
@@ -87,6 +92,7 @@ const pests = {
   "leaf-folder": {
     id: "leaf-folder",
     name: "稻纵卷叶螟",
+    pinyin: "dào zòng juǎn yè míng",
     toolId: "net",
     image: "assets/images/pests/leaf-folder.png",
     intro: "稻纵卷叶螟会把叶片卷起来并在里面取食，叶片会出现白色伤痕。",
@@ -95,6 +101,7 @@ const pests = {
   "sheath-blight": {
     id: "sheath-blight",
     name: "纹枯病",
+    pinyin: "wén kū bìng",
     toolId: "rake",
     image: "assets/images/pests/sheath-blight.png",
     intro: "纹枯病常出现在稻株下部叶鞘，形成云纹状病斑，密植潮湿时更明显。",
@@ -103,6 +110,7 @@ const pests = {
   leafhopper: {
     id: "leafhopper",
     name: "稻叶蝉",
+    pinyin: "dào yè chán",
     toolId: "sticky-board",
     image: "assets/images/pests/leafhopper.png",
     intro: "稻叶蝉会跳会飞，也会吸食叶片汁液，让叶片变黄或出现斑点。",
@@ -111,6 +119,7 @@ const pests = {
   "bacterial-blight": {
     id: "bacterial-blight",
     name: "白叶枯病",
+    pinyin: "bái yè kū bìng",
     toolId: "fungicide-sprayer",
     image: "assets/images/pests/bacterial-blight.png",
     intro: "白叶枯病会让叶尖和叶缘出现黄白色枯斑，严重时大片叶子枯黄。",
@@ -119,6 +128,7 @@ const pests = {
   "neck-blast": {
     id: "neck-blast",
     name: "穗颈瘟",
+    pinyin: "suì jǐng wēn",
     toolId: "fungicide-sprayer",
     image: "assets/images/pests/neck-blast.png",
     intro: "穗颈瘟发生在稻穗颈部，可能让稻穗变白、结实变差。",
@@ -127,6 +137,7 @@ const pests = {
   "false-smut": {
     id: "false-smut",
     name: "稻曲病",
+    pinyin: "dào qū bìng",
     toolId: "disease-shovel",
     image: "assets/images/pests/false-smut.png",
     intro: "稻曲病会让部分稻粒变成黄绿色或橙色小球，影响稻穗品质。",
@@ -138,6 +149,7 @@ const stages = [
   {
     id: "transplanting",
     name: "插秧期",
+    pinyin: "chā yāng qī",
     image: "assets/images/rice-stages/transplanting.png",
     summary: "小秧苗刚进入水田，重点观察嫩叶和幼苗受害。",
     pestIds: ["thrips", "water-weevil", "planthopper", "borer", "blast"]
@@ -145,6 +157,7 @@ const stages = [
   {
     id: "tillering",
     name: "分蘖期",
+    pinyin: "fēn niè qī",
     image: "assets/images/rice-stages/tillering.png",
     summary: "秧苗分枝变密，虫害和叶部病害更容易出现。",
     pestIds: ["leaf-folder", "leafhopper", "planthopper", "sheath-blight", "borer"]
@@ -152,6 +165,7 @@ const stages = [
   {
     id: "jointing",
     name: "拔节期",
+    pinyin: "bá jié qī",
     image: "assets/images/rice-stages/jointing.png",
     summary: "稻秆快速长高，重点保护茎秆和叶片。",
     pestIds: ["sheath-blight", "bacterial-blight", "leaf-folder", "borer", "blast"]
@@ -159,6 +173,7 @@ const stages = [
   {
     id: "heading",
     name: "抽穗期",
+    pinyin: "chōu suì qī",
     image: "assets/images/rice-stages/heading.png",
     summary: "稻穗开始形成，重点保护稻穗和上部叶片。",
     pestIds: ["neck-blast", "false-smut", "sheath-blight", "leaf-folder", "bacterial-blight"]
@@ -166,6 +181,7 @@ const stages = [
   {
     id: "mature",
     name: "成熟收割期",
+    pinyin: "chéng shú shōu gē qī",
     image: "assets/images/rice-stages/mature.png",
     summary: "稻谷成熟前，重点保护产量和稻穗品质。",
     pestIds: ["false-smut", "neck-blast", "planthopper", "sheath-blight", "borer"]
@@ -185,8 +201,11 @@ const targetClears = 3;
 const pestCount = 5;
 let mode = "auto";
 let interactionMode = "teaching";
-let challengeEnabled = false;
-let challengeSpeed = 2;
+let challengeEnabled = true;
+let challengeSpeed = 5;
+let soundEnabled = true;
+let settingsOpen = false;
+let leftPanelCollapsed = false;
 let selectedToolId = null;
 let currentStageIndex = 0;
 let activePests = [];
@@ -206,6 +225,13 @@ const challengeToggle = document.querySelector("#challengeToggle");
 const speedSlider = document.querySelector("#speedSlider");
 const speedValue = document.querySelector("#speedValue");
 const openPestGuide = document.querySelector("#openPestGuide");
+const settingsToggle = document.querySelector("#settingsToggle");
+const settingsPanel = document.querySelector("#settingsPanel");
+const collapseLeftPanel = document.querySelector("#collapseLeftPanel");
+const soundToggle = document.querySelector("#soundToggle");
+const soundIcon = document.querySelector("#soundIcon");
+const soundLabel = document.querySelector("#soundLabel");
+const welcomeAudio = document.querySelector("#welcomeAudio");
 const stageList = document.querySelector("#stageList");
 const toolList = document.querySelector("#toolList");
 const toolInfo = document.querySelector("#toolInfo");
@@ -268,6 +294,7 @@ function pickStagePests(stage) {
 }
 
 function playSound(type) {
+  if (!soundEnabled) return;
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
@@ -331,6 +358,17 @@ function playSound(type) {
   }
 }
 
+function playWelcomeAudio() {
+  if (!soundEnabled) return;
+  welcomeAudio.volume = 0.72;
+  const playResult = welcomeAudio.play();
+  if (playResult) {
+    playResult.catch(() => {
+      message.textContent = "点击小喇叭可以打开欢迎语音。";
+    });
+  }
+}
+
 function setMode(nextMode) {
   mode = nextMode;
   modeButtons.forEach((button) => {
@@ -363,6 +401,8 @@ function renderAll() {
   renderStages();
   renderInteractionMode();
   renderChallengeControls();
+  renderSettings();
+  renderSoundState();
   renderStageInfo();
   renderTools();
   renderPests();
@@ -381,7 +421,8 @@ function renderStages() {
       return `
         <li class="${classes}">
           <button type="button" data-stage-index="${index}">
-            ${index + 1}. ${stage.name}
+            <span>${index + 1}. ${stage.name}</span>
+            <small>${stage.pinyin}</small>
           </button>
         </li>
       `;
@@ -409,6 +450,28 @@ function renderChallengeControls() {
   speedSlider.disabled = !challengeEnabled;
   speedSlider.value = String(challengeSpeed);
   speedValue.textContent = String(challengeSpeed);
+}
+
+function renderSettings() {
+  settingsPanel.hidden = !settingsOpen;
+  settingsToggle.setAttribute("aria-expanded", String(settingsOpen));
+  settingsToggle.classList.toggle("selected", settingsOpen);
+  document.body.classList.toggle("left-panel-collapsed", leftPanelCollapsed);
+  collapseLeftPanel.setAttribute("aria-expanded", String(!leftPanelCollapsed));
+  collapseLeftPanel.textContent = leftPanelCollapsed ? "展开" : "收起";
+}
+
+function renderSoundState() {
+  soundToggle.setAttribute("aria-pressed", String(soundEnabled));
+  soundToggle.classList.toggle("selected", soundEnabled);
+  soundIcon.src = soundEnabled ? "assets/images/icons/speaker-on.svg" : "assets/images/icons/speaker-off.svg";
+  soundLabel.textContent = soundEnabled ? "声音开" : "声音关";
+  welcomeAudio.muted = !soundEnabled;
+  if (soundEnabled) {
+    playWelcomeAudio();
+  } else {
+    welcomeAudio.pause();
+  }
 }
 
 function renderStageInfo() {
@@ -519,6 +582,7 @@ function openPestGuideDialog() {
                     <img src="${pest.image}" alt="" aria-hidden="true" />
                     <div>
                       <strong>${pest.name}</strong>
+                      <em>${pest.pinyin}</em>
                       <span>${getTool(pest.toolId).name}</span>
                     </div>
                   </article>
@@ -535,7 +599,7 @@ function openPestGuideDialog() {
 
 function openPestImage(pestId) {
   const pest = getPest(pestId);
-  imageDialogTitle.textContent = pest.name;
+  imageDialogTitle.innerHTML = `${pest.name} <span>${pest.pinyin}</span>`;
   largePestImage.src = pest.image;
   largePestImage.alt = `${pest.name}大图`;
   imageDialogText.textContent = pest.intro;
@@ -897,5 +961,25 @@ speedSlider.addEventListener("input", () => {
 closeImageDialog.addEventListener("click", () => imageDialog.close());
 openPestGuide.addEventListener("click", openPestGuideDialog);
 closePestGuide.addEventListener("click", () => pestGuideDialog.close());
+settingsToggle.addEventListener("click", () => {
+  settingsOpen = !settingsOpen;
+  renderSettings();
+});
+collapseLeftPanel.addEventListener("click", () => {
+  leftPanelCollapsed = !leftPanelCollapsed;
+  if (leftPanelCollapsed) settingsOpen = false;
+  renderSettings();
+});
+soundToggle.addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+  renderSoundState();
+});
+document.addEventListener(
+  "pointerdown",
+  () => {
+    if (soundEnabled && welcomeAudio.paused) playWelcomeAudio();
+  },
+  { once: true }
+);
 
 startStage(0);

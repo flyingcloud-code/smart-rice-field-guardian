@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="声音关">
+  <rect width="48" height="48" rx="12" fill="#f4e7e7"/>
+  <path d="M8 20h8l10-8v24l-10-8H8z" fill="#7d2f2f"/>
+  <path d="M32 18l9 12M41 18 32 30" fill="none" stroke="#7d2f2f" stroke-width="4" stroke-linecap="round"/>
+</svg>

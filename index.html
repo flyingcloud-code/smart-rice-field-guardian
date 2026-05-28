@@ -3,15 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>守护智慧稻田</title>
+    <title>小稻农探秘营</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="game-shell">
       <header class="stage-bar" aria-label="水稻生长阶段">
         <div class="title-row">
-          <h1>守护智慧稻田</h1>
-          <div class="header-controls">
+          <h1>小稻农探秘营</h1>
+        </div>
+        <ol id="stageList" class="stage-list" aria-label="阶段状态与选关"></ol>
+      </header>
+
+      <section class="play-area" aria-label="游戏区域">
+        <aside class="guardian-panel">
+          <button id="collapseLeftPanel" class="panel-collapse" type="button" aria-expanded="true">收起</button>
+          <div class="guardian" aria-label="稻田守护员">
+            <img src="assets/images/characters/guardian.png" alt="稻田守护员" />
+          </div>
+          <button id="settingsToggle" class="settings-toggle" type="button" aria-expanded="false">设置</button>
+          <section id="settingsPanel" class="settings-panel" hidden>
             <div class="mode-toggle" aria-label="关卡模式">
               <button class="selected" type="button" data-mode="auto">自动模式</button>
               <button type="button" data-mode="manual">手动选关</button>
@@ -20,27 +31,19 @@
               <button class="selected" type="button" data-interaction-mode="teaching">教学模式</button>
               <button type="button" data-interaction-mode="game">游戏模式</button>
             </div>
-            <button id="openPestGuide" class="guide-button" type="button">病虫害详细介绍</button>
-          </div>
-        </div>
-        <div class="challenge-row" aria-label="挑战模式设置">
-          <label class="challenge-toggle">
-            <input id="challengeToggle" type="checkbox" />
-            <span>挑战模式</span>
-          </label>
-          <div class="speed-slider" aria-label="移动速度">
-            <label for="speedSlider">移动速度 <strong id="speedValue">2</strong></label>
-            <input id="speedSlider" type="range" min="1" max="10" value="2" step="1" disabled />
-          </div>
-        </div>
-        <ol id="stageList" class="stage-list" aria-label="阶段状态与选关"></ol>
-      </header>
-
-      <section class="play-area" aria-label="游戏区域">
-        <aside class="guardian-panel">
-          <div class="guardian" aria-label="稻田守护员">
-            <img src="assets/images/characters/guardian.png" alt="稻田守护员" />
-          </div>
+            <label class="challenge-toggle">
+              <input id="challengeToggle" type="checkbox" checked />
+              <span>挑战模式</span>
+            </label>
+            <div class="speed-slider" aria-label="移动速度">
+              <label for="speedSlider">移动速度 <strong id="speedValue">5</strong></label>
+              <input id="speedSlider" type="range" min="1" max="10" value="5" step="1" />
+            </div>
+            <button id="soundToggle" class="sound-toggle" type="button" aria-pressed="true">
+              <img id="soundIcon" src="assets/images/icons/speaker-on.svg" alt="" aria-hidden="true" />
+              <span id="soundLabel">声音开</span>
+            </button>
+          </section>
           <p id="message" class="message">先选择一个工具，再点击稻田里的病虫害。</p>
           <div class="stats" aria-label="本关进度">
             <span>尝试 <strong id="attemptCount">0/4</strong></span>
@@ -67,8 +70,11 @@
             <p>点击或悬停工具，可以查看用途和适合处理的病虫害。</p>
           </div>
           <div id="toolList" class="tool-list"></div>
+          <button id="openPestGuide" class="guide-button" type="button">病虫害详细介绍</button>
         </aside>
       </section>
+
+      <audio id="welcomeAudio" src="assets/audio/welcome.mp3" loop preload="auto"></audio>
 
       <dialog id="stageDialog" class="win-dialog">
         <h2 id="dialogTitle">本阶段守护成功！</h2>
