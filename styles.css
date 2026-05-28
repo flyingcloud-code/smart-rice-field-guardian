@@ -47,8 +47,40 @@ button {
   gap: 8px;
 }
 
+.challenge-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 0 0 12px;
+}
+
+.challenge-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 2px solid #cbd8c4;
+  border-radius: 8px;
+  background: #fff;
+  font-weight: 800;
+}
+
+.challenge-toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: #2f7d32;
+}
+
+.speed-toggle {
+  display: flex;
+  gap: 8px;
+}
+
 .mode-toggle button,
-.stage-list button {
+.stage-list button,
+.speed-toggle button {
   min-height: 42px;
   padding: 0 14px;
   border: 2px solid #cbd8c4;
@@ -59,10 +91,16 @@ button {
   font-weight: 800;
 }
 
-.mode-toggle button.selected {
+.mode-toggle button.selected,
+.speed-toggle button.selected {
   border-color: #2f7d32;
   background: #2f7d32;
   color: #fff;
+}
+
+.speed-toggle button:disabled {
+  opacity: 0.48;
+  cursor: default;
 }
 
 .stage-list {
@@ -177,6 +215,7 @@ button {
   border-radius: 8px;
   border: 1px solid #b8cdb0;
   background: #dbe6c9;
+  touch-action: none;
 }
 
 .field-photo {
@@ -259,6 +298,11 @@ button {
   animation: wrong-tool 520ms ease-in-out;
   border-color: #d32f2f;
   box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.18), 0 8px 28px rgba(211, 47, 47, 0.55);
+}
+
+.pest.drag-over {
+  border-color: #2f7d32;
+  box-shadow: 0 0 0 8px rgba(47, 125, 50, 0.24), 0 8px 32px rgba(47, 125, 50, 0.65);
 }
 
 .pest .name {
@@ -394,6 +438,8 @@ button {
   cursor: pointer;
   text-align: left;
   font-weight: 800;
+  touch-action: none;
+  user-select: none;
 }
 
 .tool-button.selected {
@@ -413,6 +459,35 @@ button {
   border-radius: 8px;
   object-fit: contain;
   background: #fff;
+}
+
+.drag-tool {
+  position: fixed;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 48px auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 150px;
+  max-width: 220px;
+  padding: 8px 10px;
+  border: 2px solid #2f7d32;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 32px rgba(31, 42, 31, 0.3);
+  font-weight: 900;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.drag-tool img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.dragging-tool {
+  cursor: grabbing;
 }
 
 .win-dialog {
@@ -498,6 +573,17 @@ button {
 @media (max-width: 860px) {
   .title-row {
     display: grid;
+  }
+
+  .challenge-row {
+    align-items: stretch;
+    justify-content: stretch;
+    flex-direction: column;
+  }
+
+  .speed-toggle {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .stage-list {

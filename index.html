@@ -16,6 +16,17 @@
             <button type="button" data-mode="manual">手动选关</button>
           </div>
         </div>
+        <div class="challenge-row" aria-label="挑战模式设置">
+          <label class="challenge-toggle">
+            <input id="challengeToggle" type="checkbox" />
+            <span>挑战模式</span>
+          </label>
+          <div class="speed-toggle" aria-label="移动速度">
+            <button class="selected" type="button" data-speed="slow">低速</button>
+            <button type="button" data-speed="medium">中速</button>
+            <button type="button" data-speed="fast">高速</button>
+          </div>
+        </div>
         <ol id="stageList" class="stage-list" aria-label="阶段状态与选关"></ol>
       </header>
 

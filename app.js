@@ -173,18 +173,25 @@ const stages = [
 ];
 
 const positions = [
-  { left: "14%", top: "18%" },
-  { left: "42%", top: "20%" },
-  { left: "70%", top: "18%" },
-  { left: "26%", top: "58%" },
-  { left: "62%", top: "58%" }
+  { x: 14, y: 18 },
+  { x: 42, y: 20 },
+  { x: 70, y: 18 },
+  { x: 26, y: 58 },
+  { x: 62, y: 58 }
 ];
 
 const maxAttempts = 4;
 const targetClears = 3;
 const pestCount = 5;
+const challengeSpeeds = {
+  slow: 0.018,
+  medium: 0.032,
+  fast: 0.052
+};
 
 let mode = "auto";
+let challengeEnabled = false;
+let challengeSpeed = "slow";
 let selectedToolId = null;
 let currentStageIndex = 0;
 let activePests = [];
@@ -193,12 +200,18 @@ let completedStageIds = new Set();
 let attempts = 0;
 let roundClosed = false;
 let feedbackLocked = false;
+let dragState = null;
+let movementFrame = null;
+let lastMovementTime = 0;
 
 const modeButtons = document.querySelectorAll("[data-mode]");
+const challengeToggle = document.querySelector("#challengeToggle");
+const speedButtons = document.querySelectorAll("[data-speed]");
 const stageList = document.querySelector("#stageList");
 const toolList = document.querySelector("#toolList");
 const toolInfo = document.querySelector("#toolInfo");
 const pestLayer = document.querySelector("#pestLayer");
+const field = document.querySelector("#field");
 const fieldPhoto = document.querySelector(".field-photo");
 const message = document.querySelector("#message");
 const stageTitle = document.querySelector("#stageTitle");
@@ -237,34 +250,78 @@ function getPest(pestId) {
 function pickStagePests(stage) {
   return stage.pestIds
     .slice(0, pestCount)
-    .map((pestId, index) => ({ ...pests[pestId], position: positions[index] }));
+    .map((pestId, index) => {
+      const position = positions[index];
+      const direction = Math.random() > 0.5 ? 1 : -1;
+      return {
+        ...pests[pestId],
+        x: position.x,
+        y: position.y,
+        vx: direction * (0.65 + Math.random() * 0.7),
+        vy: (Math.random() > 0.5 ? 1 : -1) * (0.45 + Math.random() * 0.6)
+      };
+    });
 }
 
-function playTone(type) {
+function playSound(type) {
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
 
     const context = new AudioContext();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
     const now = context.currentTime;
-    const settings = {
-      tool: { frequency: 520, duration: 0.07, type: "sine", volume: 0.035 },
-      success: { frequency: 760, duration: 0.16, type: "triangle", volume: 0.055 },
-      fail: { frequency: 180, duration: 0.18, type: "sawtooth", volume: 0.035 }
-    }[type];
+    const melodies = {
+      tool: [
+        [523.25, 0, 0.055],
+        [659.25, 0.055, 0.055],
+        [783.99, 0.11, 0.075]
+      ],
+      success: [
+        [659.25, 0, 0.07],
+        [783.99, 0.075, 0.07],
+        [987.77, 0.15, 0.09],
+        [1318.51, 0.245, 0.12]
+      ],
+      fail: [
+        [392, 0, 0.09],
+        [349.23, 0.1, 0.09],
+        [293.66, 0.2, 0.15]
+      ],
+      complete: [
+        [523.25, 0, 0.08],
+        [659.25, 0.085, 0.08],
+        [783.99, 0.17, 0.08],
+        [1046.5, 0.255, 0.12],
+        [783.99, 0.4, 0.08],
+        [1046.5, 0.49, 0.16]
+      ],
+      retry: [
+        [329.63, 0, 0.11],
+        [392, 0.12, 0.11],
+        [493.88, 0.24, 0.13],
+        [440, 0.39, 0.16]
+      ]
+    };
+    const wave = type === "fail" ? "square" : "triangle";
+    const volume = type === "complete" ? 0.06 : 0.045;
+    const notes = melodies[type] || melodies.tool;
 
-    oscillator.type = settings.type;
-    oscillator.frequency.setValueAtTime(settings.frequency, now);
-    if (type === "success") oscillator.frequency.exponentialRampToValueAtTime(1040, now + settings.duration);
-    if (type === "fail") oscillator.frequency.exponentialRampToValueAtTime(120, now + settings.duration);
-    gain.gain.setValueAtTime(settings.volume, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + settings.duration);
-    oscillator.connect(gain).connect(context.destination);
-    oscillator.start(now);
-    oscillator.stop(now + settings.duration);
-    oscillator.onended = () => context.close();
+    notes.forEach(([frequency, delay, duration]) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      const start = now + delay;
+      oscillator.type = wave;
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(0.001, start);
+      gain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(start);
+      oscillator.stop(start + duration + 0.02);
+    });
+
+    const lastNote = notes[notes.length - 1];
+    window.setTimeout(() => context.close(), (lastNote[1] + lastNote[2] + 0.08) * 1000);
   } catch {
     // Audio feedback should never block the core touch interaction.
   }
@@ -285,6 +342,7 @@ function setMode(nextMode) {
 }
 
 function startStage(stageIndex) {
+  stopChallengeMovement();
   currentStageIndex = stageIndex;
   selectedToolId = null;
   clearedPests = [];
@@ -292,12 +350,14 @@ function startStage(stageIndex) {
   roundClosed = false;
   feedbackLocked = false;
   activePests = pickStagePests(getCurrentStage());
-  message.textContent = "先选择一个工具，再点击稻田里的病虫害。5 个目标里，4 次尝试内完成 3 个即可过关。";
+  message.textContent = "选择工具后，可以点击目标，也可以把工具拖到稻田目标上。5 个目标里，4 次尝试内完成 3 个即可过关。";
   renderAll();
+  startChallengeMovement();
 }
 
 function renderAll() {
   renderStages();
+  renderChallengeControls();
   renderStageInfo();
   renderTools();
   renderPests();
@@ -332,6 +392,14 @@ function renderStages() {
   });
 }
 
+function renderChallengeControls() {
+  challengeToggle.checked = challengeEnabled;
+  speedButtons.forEach((button) => {
+    button.classList.toggle("selected", button.dataset.speed === challengeSpeed);
+    button.disabled = !challengeEnabled;
+  });
+}
+
 function renderStageInfo() {
   const stage = getCurrentStage();
   stageTitle.textContent = `${stage.name}关卡`;
@@ -361,12 +429,14 @@ function renderTools() {
     const tool = getTool(button.dataset.toolId);
     button.addEventListener("mouseenter", () => renderToolInfo(tool));
     button.addEventListener("focus", () => renderToolInfo(tool));
+    button.addEventListener("pointerdown", (event) => startToolDrag(event, tool));
     button.addEventListener("click", () => {
-      playTone("tool");
+      if (dragState?.didDrag) return;
+      playSound("tool");
       selectedToolId = button.dataset.toolId;
       const tool = getTool(selectedToolId);
       renderToolInfo(tool);
-      message.textContent = `已选择：${tool.name}。现在点击稻田里的病虫害。`;
+      message.textContent = `已选择：${tool.name}。可以点击目标，也可以把工具拖到目标上。`;
       renderTools();
     });
   });
@@ -384,7 +454,7 @@ function renderPests() {
   pestLayer.innerHTML = activePests
     .map(
       (pest) => `
-        <div class="pest" data-pest-card="${pest.id}" style="left:${pest.position.left}; top:${pest.position.top}">
+        <div class="pest" data-pest-card="${pest.id}" style="left:${pest.x}%; top:${pest.y}%">
           <button class="pest-image-button" type="button" data-pest-image-id="${pest.id}" aria-label="查看${pest.name}大图">
             <img class="photo" src="${pest.image}" alt="" aria-hidden="true" />
           </button>
@@ -421,23 +491,149 @@ function openPestImage(pestId) {
 }
 
 function handlePestClick(pestId) {
+  processAttempt(selectedToolId, pestId);
+}
+
+function startToolDrag(event, tool) {
+  if (roundClosed || feedbackLocked || event.button > 0) return;
+
+  selectedToolId = tool.id;
+  renderToolInfo(tool);
+  toolList.querySelectorAll(".tool-button").forEach((button) => {
+    button.classList.toggle("selected", button.dataset.toolId === tool.id);
+  });
+
+  const ghost = document.createElement("div");
+  ghost.className = "drag-tool";
+  ghost.innerHTML = `
+    <img src="${tool.image}" alt="" aria-hidden="true" />
+    <span>${tool.name}</span>
+  `;
+  document.body.appendChild(ghost);
+
+  dragState = {
+    pointerId: event.pointerId,
+    toolId: tool.id,
+    ghost,
+    startX: event.clientX,
+    startY: event.clientY,
+    didDrag: false,
+    startedSound: false
+  };
+
+  buttonCapture(event.currentTarget, event.pointerId);
+  moveDragGhost(event.clientX, event.clientY);
+  message.textContent = `拖动${tool.name}去碰到稻田里的目标。`;
+  document.body.classList.add("dragging-tool");
+  window.addEventListener("pointermove", handleToolDragMove);
+  window.addEventListener("pointerup", finishToolDrag);
+  window.addEventListener("pointercancel", cancelToolDrag);
+}
+
+function buttonCapture(button, pointerId) {
+  try {
+    button.setPointerCapture(pointerId);
+  } catch {
+    // Pointer capture is a convenience, not required for the drag interaction.
+  }
+}
+
+function handleToolDragMove(event) {
+  if (!dragState || event.pointerId !== dragState.pointerId) return;
+  const dx = Math.abs(event.clientX - dragState.startX);
+  const dy = Math.abs(event.clientY - dragState.startY);
+  if (dx + dy > 8) {
+    dragState.didDrag = true;
+    if (!dragState.startedSound) {
+      dragState.startedSound = true;
+      playSound("tool");
+    }
+  }
+  moveDragGhost(event.clientX, event.clientY);
+  highlightCollidingPest(event.clientX, event.clientY);
+}
+
+function moveDragGhost(clientX, clientY) {
+  if (!dragState) return;
+  dragState.ghost.style.left = `${clientX}px`;
+  dragState.ghost.style.top = `${clientY}px`;
+}
+
+function finishToolDrag(event) {
+  if (!dragState || event.pointerId !== dragState.pointerId) return;
+  const currentDrag = dragState;
+  const targetPestId = currentDrag.didDrag ? getPestAtPoint(event.clientX, event.clientY) : null;
+  cleanupToolDrag();
+
+  if (targetPestId) {
+    processAttempt(currentDrag.toolId, targetPestId);
+    return;
+  }
+
+  if (currentDrag.didDrag) {
+    message.textContent = "工具还没有碰到病虫害目标，再试试看。";
+  }
+}
+
+function cancelToolDrag(event) {
+  if (dragState && event.pointerId !== dragState.pointerId) return;
+  cleanupToolDrag();
+}
+
+function cleanupToolDrag() {
+  document.body.classList.remove("dragging-tool");
+  document.querySelectorAll(".pest.drag-over").forEach((item) => item.classList.remove("drag-over"));
+  if (dragState?.ghost) dragState.ghost.remove();
+  dragState = null;
+  window.removeEventListener("pointermove", handleToolDragMove);
+  window.removeEventListener("pointerup", finishToolDrag);
+  window.removeEventListener("pointercancel", cancelToolDrag);
+}
+
+function highlightCollidingPest(clientX, clientY) {
+  const pestId = getPestAtPoint(clientX, clientY);
+  document.querySelectorAll(".pest").forEach((card) => {
+    card.classList.toggle("drag-over", card.dataset.pestCard === pestId);
+  });
+}
+
+function getPestAtPoint(clientX, clientY) {
+  const fieldRect = field.getBoundingClientRect();
+  if (
+    clientX < fieldRect.left ||
+    clientX > fieldRect.right ||
+    clientY < fieldRect.top ||
+    clientY > fieldRect.bottom
+  ) {
+    return null;
+  }
+
+  const pestCards = Array.from(document.querySelectorAll(".pest"));
+  const match = pestCards.find((card) => {
+    const rect = card.getBoundingClientRect();
+    return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+  });
+  return match?.dataset.pestCard || null;
+}
+
+function processAttempt(toolId, pestId) {
   if (roundClosed || feedbackLocked) return;
 
   const pest = activePests.find((item) => item.id === pestId);
   if (!pest) return;
 
-  if (!selectedToolId) {
+  if (!toolId) {
     message.textContent = "先选择一个工具吧";
     return;
   }
 
   attempts += 1;
 
-  if (selectedToolId !== pest.toolId) {
+  if (toolId !== pest.toolId) {
     selectedToolId = null;
     message.textContent = "工具不对，请重新选择";
     showPestFeedback(pestId, "fail");
-    playTone("fail");
+    playSound("fail");
     renderTools();
     renderStats();
     feedbackLocked = true;
@@ -451,7 +647,7 @@ function handlePestClick(pestId) {
   clearedPests.push(pest);
   selectedToolId = null;
   showPestFeedback(pestId, "success");
-  playTone("success");
+  playSound("success");
   message.textContent = `成功清除了${pest.name}！`;
 
   renderTools();
@@ -478,13 +674,71 @@ function showPestFeedback(pestId, type) {
   pestCard.classList.add(type);
 }
 
+function startChallengeMovement() {
+  stopChallengeMovement();
+  if (!challengeEnabled || roundClosed) return;
+  lastMovementTime = performance.now();
+  movementFrame = window.requestAnimationFrame(moveChallengePests);
+}
+
+function stopChallengeMovement() {
+  if (movementFrame) {
+    window.cancelAnimationFrame(movementFrame);
+    movementFrame = null;
+  }
+}
+
+function moveChallengePests(timestamp) {
+  if (!challengeEnabled || roundClosed) {
+    stopChallengeMovement();
+    return;
+  }
+
+  const delta = Math.min(timestamp - lastMovementTime, 48);
+  lastMovementTime = timestamp;
+  const speed = challengeSpeeds[challengeSpeed];
+
+  activePests = activePests.map((pest) => {
+    let nextX = pest.x + pest.vx * speed * delta;
+    let nextY = pest.y + pest.vy * speed * delta;
+    let nextVx = pest.vx;
+    let nextVy = pest.vy;
+
+    if (nextX < 5 || nextX > 82) {
+      nextVx *= -1;
+      nextX = Math.max(5, Math.min(82, nextX));
+    }
+
+    if (nextY < 8 || nextY > 76) {
+      nextVy *= -1;
+      nextY = Math.max(8, Math.min(76, nextY));
+    }
+
+    return { ...pest, x: nextX, y: nextY, vx: nextVx, vy: nextVy };
+  });
+
+  updatePestPositions();
+  movementFrame = window.requestAnimationFrame(moveChallengePests);
+}
+
+function updatePestPositions() {
+  activePests.forEach((pest) => {
+    const card = document.querySelector(`[data-pest-card="${pest.id}"]`);
+    if (!card) return;
+    card.style.left = `${pest.x}%`;
+    card.style.top = `${pest.y}%`;
+  });
+}
+
 function showStageCompleted() {
   const stage = getCurrentStage();
   roundClosed = true;
+  stopChallengeMovement();
   completedStageIds.add(stage.id);
   renderStages();
   renderTools();
   renderPests();
+  playSound("complete");
 
   const isLastAutoStage = mode === "auto" && currentStageIndex === stages.length - 1;
   dialogTitle.textContent = isLastAutoStage ? "智慧稻田守护完成！" : "本阶段守护成功！";
@@ -528,8 +782,10 @@ function showStageCompleted() {
 
 function showStageFailed() {
   roundClosed = true;
+  stopChallengeMovement();
   renderTools();
   renderPests();
+  playSound("retry");
   dialogTitle.textContent = "再试一次";
   dialogText.textContent = `${getCurrentStage().name}还差一点。4 次尝试用完了，重新观察再挑战。`;
   resultList.innerHTML = clearedPests.length
@@ -553,6 +809,23 @@ function showStageFailed() {
 
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => setMode(button.dataset.mode));
+});
+
+challengeToggle.addEventListener("change", () => {
+  challengeEnabled = challengeToggle.checked;
+  renderChallengeControls();
+  message.textContent = challengeEnabled
+    ? "挑战模式已开启：目标会移动。选择速度后，拖动工具去碰撞目标。"
+    : "挑战模式已关闭：目标保持固定。";
+  startChallengeMovement();
+});
+
+speedButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    challengeSpeed = button.dataset.speed;
+    renderChallengeControls();
+    message.textContent = `挑战速度已切换为${button.textContent}。`;
+  });
 });
 
 closeImageDialog.addEventListener("click", () => imageDialog.close());
