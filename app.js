@@ -183,15 +183,10 @@ const positions = [
 const maxAttempts = 4;
 const targetClears = 3;
 const pestCount = 5;
-const challengeSpeeds = {
-  slow: 0.018,
-  medium: 0.032,
-  fast: 0.052
-};
-
 let mode = "auto";
+let interactionMode = "teaching";
 let challengeEnabled = false;
-let challengeSpeed = "slow";
+let challengeSpeed = 2;
 let selectedToolId = null;
 let currentStageIndex = 0;
 let activePests = [];
@@ -201,12 +196,16 @@ let attempts = 0;
 let roundClosed = false;
 let feedbackLocked = false;
 let dragState = null;
+let suppressToolClick = false;
 let movementFrame = null;
 let lastMovementTime = 0;
 
 const modeButtons = document.querySelectorAll("[data-mode]");
+const interactionModeButtons = document.querySelectorAll("[data-interaction-mode]");
 const challengeToggle = document.querySelector("#challengeToggle");
-const speedButtons = document.querySelectorAll("[data-speed]");
+const speedSlider = document.querySelector("#speedSlider");
+const speedValue = document.querySelector("#speedValue");
+const openPestGuide = document.querySelector("#openPestGuide");
 const stageList = document.querySelector("#stageList");
 const toolList = document.querySelector("#toolList");
 const toolInfo = document.querySelector("#toolInfo");
@@ -230,6 +229,10 @@ const closeImageDialog = document.querySelector("#closeImageDialog");
 const imageDialogTitle = document.querySelector("#imageDialogTitle");
 const largePestImage = document.querySelector("#largePestImage");
 const imageDialogText = document.querySelector("#imageDialogText");
+const pestGuideDialog = document.querySelector("#pestGuideDialog");
+const closePestGuide = document.querySelector("#closePestGuide");
+const pestGuideSummary = document.querySelector("#pestGuideSummary");
+const pestGuideStages = document.querySelector("#pestGuideStages");
 
 function shuffle(items) {
   return [...items].sort(() => Math.random() - 0.5);
@@ -258,7 +261,8 @@ function pickStagePests(stage) {
         x: position.x,
         y: position.y,
         vx: direction * (0.65 + Math.random() * 0.7),
-        vy: (Math.random() > 0.5 ? 1 : -1) * (0.45 + Math.random() * 0.6)
+        vy: (Math.random() > 0.5 ? 1 : -1) * (0.45 + Math.random() * 0.6),
+        speedFactor: 0.42 + Math.random() * 1.28
       };
     });
 }
@@ -357,6 +361,7 @@ function startStage(stageIndex) {
 
 function renderAll() {
   renderStages();
+  renderInteractionMode();
   renderChallengeControls();
   renderStageInfo();
   renderTools();
@@ -392,12 +397,18 @@ function renderStages() {
   });
 }
 
+function renderInteractionMode() {
+  document.body.classList.toggle("game-info-off", interactionMode === "game");
+  interactionModeButtons.forEach((button) => {
+    button.classList.toggle("selected", button.dataset.interactionMode === interactionMode);
+  });
+}
+
 function renderChallengeControls() {
   challengeToggle.checked = challengeEnabled;
-  speedButtons.forEach((button) => {
-    button.classList.toggle("selected", button.dataset.speed === challengeSpeed);
-    button.disabled = !challengeEnabled;
-  });
+  speedSlider.disabled = !challengeEnabled;
+  speedSlider.value = String(challengeSpeed);
+  speedValue.textContent = String(challengeSpeed);
 }
 
 function renderStageInfo() {
@@ -431,7 +442,10 @@ function renderTools() {
     button.addEventListener("focus", () => renderToolInfo(tool));
     button.addEventListener("pointerdown", (event) => startToolDrag(event, tool));
     button.addEventListener("click", () => {
-      if (dragState?.didDrag) return;
+      if (suppressToolClick) {
+        suppressToolClick = false;
+        return;
+      }
       playSound("tool");
       selectedToolId = button.dataset.toolId;
       const tool = getTool(selectedToolId);
@@ -476,9 +490,47 @@ function renderPests() {
       button.addEventListener("click", () => handlePestClick(button.dataset.pestId));
     }
     if (button.dataset.pestImageId) {
-      button.addEventListener("click", () => openPestImage(button.dataset.pestImageId));
+      button.addEventListener("click", () => {
+        if (interactionMode === "teaching") {
+          openPestImage(button.dataset.pestImageId);
+          return;
+        }
+        handlePestClick(button.dataset.pestImageId);
+      });
     }
   });
+}
+
+function openPestGuideDialog() {
+  const uniquePestCount = Object.keys(pests).length;
+  pestGuideSummary.textContent = `当前游戏共包含 ${uniquePestCount} 种水稻病虫害。下面按水稻生长阶段展示每个阶段会遇到的重点对象。`;
+  pestGuideStages.innerHTML = stages
+    .map((stage) => {
+      const stagePests = stage.pestIds.map((pestId) => pests[pestId]);
+      return `
+        <section class="guide-stage">
+          <h3>${stage.name}</h3>
+          <p>${stage.summary}</p>
+          <div class="guide-pest-grid">
+            ${stagePests
+              .map(
+                (pest) => `
+                  <article class="guide-pest">
+                    <img src="${pest.image}" alt="" aria-hidden="true" />
+                    <div>
+                      <strong>${pest.name}</strong>
+                      <span>${getTool(pest.toolId).name}</span>
+                    </div>
+                  </article>
+                `
+              )
+              .join("")}
+          </div>
+        </section>
+      `;
+    })
+    .join("");
+  pestGuideDialog.showModal();
 }
 
 function openPestImage(pestId) {
@@ -563,6 +615,7 @@ function finishToolDrag(event) {
   if (!dragState || event.pointerId !== dragState.pointerId) return;
   const currentDrag = dragState;
   const targetPestId = currentDrag.didDrag ? getPestAtPoint(event.clientX, event.clientY) : null;
+  suppressToolClick = currentDrag.didDrag;
   cleanupToolDrag();
 
   if (targetPestId) {
@@ -696,11 +749,11 @@ function moveChallengePests(timestamp) {
 
   const delta = Math.min(timestamp - lastMovementTime, 48);
   lastMovementTime = timestamp;
-  const speed = challengeSpeeds[challengeSpeed];
+  const speed = getChallengeSpeedRate();
 
   activePests = activePests.map((pest) => {
-    let nextX = pest.x + pest.vx * speed * delta;
-    let nextY = pest.y + pest.vy * speed * delta;
+    let nextX = pest.x + pest.vx * pest.speedFactor * speed * delta;
+    let nextY = pest.y + pest.vy * pest.speedFactor * speed * delta;
     let nextVx = pest.vx;
     let nextVy = pest.vy;
 
@@ -719,6 +772,10 @@ function moveChallengePests(timestamp) {
 
   updatePestPositions();
   movementFrame = window.requestAnimationFrame(moveChallengePests);
+}
+
+function getChallengeSpeedRate() {
+  return 0.001 + (challengeSpeed - 1) * 0.00075;
 }
 
 function updatePestPositions() {
@@ -811,6 +868,17 @@ modeButtons.forEach((button) => {
   button.addEventListener("click", () => setMode(button.dataset.mode));
 });
 
+interactionModeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    interactionMode = button.dataset.interactionMode;
+    renderInteractionMode();
+    message.textContent =
+      interactionMode === "teaching"
+        ? "教学模式：移到病虫害上可看说明，点击小图可看大图。"
+        : "游戏模式：已关闭病虫害悬停说明和小图放大，专注完成挑战。";
+  });
+});
+
 challengeToggle.addEventListener("change", () => {
   challengeEnabled = challengeToggle.checked;
   renderChallengeControls();
@@ -820,14 +888,14 @@ challengeToggle.addEventListener("change", () => {
   startChallengeMovement();
 });
 
-speedButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    challengeSpeed = button.dataset.speed;
-    renderChallengeControls();
-    message.textContent = `挑战速度已切换为${button.textContent}。`;
-  });
+speedSlider.addEventListener("input", () => {
+  challengeSpeed = Number(speedSlider.value);
+  renderChallengeControls();
+  message.textContent = `挑战速度已调到 ${challengeSpeed}。`;
 });
 
 closeImageDialog.addEventListener("click", () => imageDialog.close());
+openPestGuide.addEventListener("click", openPestGuideDialog);
+closePestGuide.addEventListener("click", () => pestGuideDialog.close());
 
 startStage(0);
