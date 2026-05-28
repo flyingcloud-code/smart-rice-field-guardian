@@ -45,7 +45,7 @@ button {
 .panel-collapse,
 .settings-toggle,
 .sound-toggle {
-  min-height: 42px;
+  min-height: 36px;
   border: 2px solid #cbd8c4;
   border-radius: 8px;
   background: #fff;
@@ -63,24 +63,25 @@ button {
 
 .sound-toggle {
   display: grid;
-  grid-template-columns: 34px 1fr;
+  grid-template-columns: 28px 1fr;
   align-items: center;
   gap: 8px;
-  padding: 4px 10px;
+  padding: 4px 8px;
 }
 
 .sound-toggle img {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
 }
 
 .settings-panel {
   display: grid;
-  gap: 10px;
-  padding: 10px;
+  gap: 8px;
+  padding: 8px;
   border: 1px solid #d7e0d2;
   border-radius: 8px;
   background: #fff;
+  overflow: hidden;
 }
 
 .settings-panel[hidden] {
@@ -100,6 +101,13 @@ button {
   gap: 8px;
 }
 
+.settings-panel .mode-toggle,
+.settings-panel .interaction-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
 .challenge-row {
   display: flex;
   align-items: center;
@@ -112,17 +120,18 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 42px;
-  padding: 0 12px;
+  min-height: 34px;
+  padding: 0 8px;
   border: 2px solid #cbd8c4;
   border-radius: 8px;
   background: #fff;
+  font-size: 14px;
   font-weight: 800;
 }
 
 .challenge-toggle input {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   accent-color: #2f7d32;
 }
 
@@ -144,6 +153,21 @@ button {
   accent-color: #2f7d32;
 }
 
+.settings-panel .speed-slider {
+  grid-template-columns: 1fr;
+  gap: 6px;
+  min-height: auto;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.settings-panel .speed-slider label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .mode-toggle button,
 .stage-list button,
 .interaction-toggle button,
@@ -156,6 +180,14 @@ button {
   color: #1f2a1f;
   cursor: pointer;
   font-weight: 800;
+}
+
+.settings-panel .mode-toggle button,
+.settings-panel .interaction-toggle button {
+  min-height: 34px;
+  padding: 0 6px;
+  font-size: 14px;
+  line-height: 1.15;
 }
 
 .mode-toggle button.selected,
@@ -228,7 +260,7 @@ button {
 
 .play-area {
   display: grid;
-  grid-template-columns: 190px minmax(420px, 1fr) 220px;
+  grid-template-columns: 200px minmax(420px, 1fr) 220px;
   gap: 16px;
   padding: 16px;
   min-height: 0;
