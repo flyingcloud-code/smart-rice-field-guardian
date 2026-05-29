@@ -3,42 +3,42 @@ const tools = [
     id: "insecticide-sprayer",
     name: "喷雾器（驱虫药液）",
     image: "assets/images/tools/insecticide-sprayer.webp",
-    description: "把驱虫药液均匀喷到稻株上，适合处理会吸食汁液的小虫。",
+    description: "把驱虫药液喷到稻株上，处理吸食汁液的小虫。",
     targets: ["稻飞虱"]
   },
   {
     id: "net",
     name: "捕虫网",
     image: "assets/images/tools/net.webp",
-    description: "用网捕捉或清理较大的害虫，适合会啃食叶片、茎秆或稻穗的虫害。",
+    description: "捕捉较大的害虫，适合啃食叶片、茎秆或稻穗的虫害。",
     targets: ["稻水象甲", "稻螟虫", "稻纵卷叶螟"]
   },
   {
     id: "sticky-board",
     name: "粘虫板",
     image: "assets/images/tools/sticky-board.webp",
-    description: "利用黄色粘板吸引并粘住小型飞虫，适合观察和减少小虫数量。",
+    description: "吸引并粘住小型飞虫，帮助观察和减少虫量。",
     targets: ["稻蓟马", "稻叶蝉"]
   },
   {
     id: "fungicide-sprayer",
     name: "杀菌喷雾器",
     image: "assets/images/tools/fungicide-sprayer.webp",
-    description: "喷洒杀菌药液，适合处理由病菌引起的叶片、茎秆或稻穗病害。",
+    description: "喷洒杀菌药液，处理叶片、茎秆或稻穗病害。",
     targets: ["稻瘟病", "穗颈瘟", "白叶枯病"]
   },
   {
     id: "rake",
     name: "除草耙",
     image: "assets/images/tools/rake.webp",
-    description: "清理田间杂草和病叶，帮助稻田通风，减少病害继续扩散。",
+    description: "清理杂草和病叶，帮助通风，减少病害扩散。",
     targets: ["纹枯病"]
   },
   {
     id: "disease-shovel",
     name: "病害清理铲",
     image: "assets/images/tools/disease-shovel.webp",
-    description: "小心剔除已经明显患病的稻穗或病部，避免病害继续传播。",
+    description: "剔除明显患病的稻穗或病部，避免继续传播。",
     targets: ["稻曲病"]
   }
 ];
