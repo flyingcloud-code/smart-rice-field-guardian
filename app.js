@@ -206,7 +206,6 @@ let challengeSpeed = 5;
 let soundEnabled = true;
 let settingsOpen = false;
 let leftPanelCollapsed = false;
-let gameInProgress = false;
 let selectedToolId = null;
 let currentStageIndex = 0;
 let activePests = [];
@@ -360,13 +359,13 @@ function playSound(type) {
 }
 
 function playWelcomeAudio() {
-  if (!soundEnabled || gameInProgress) return;
+  if (!soundEnabled) return;
   welcomeAudio.volume = 0.72;
   welcomeAudio.currentTime = 0;
   const playResult = welcomeAudio.play();
   if (playResult) {
     playResult.catch(() => {
-      if (!gameInProgress && soundEnabled) {
+      if (soundEnabled) {
         message.textContent = "点击小喇叭可以打开欢迎语音。";
       }
     });
@@ -385,24 +384,13 @@ function stopWelcomeAudio() {
   welcomeAudio.currentTime = 0;
 }
 
-function scheduleWelcomeAudio(delay = 10000) {
+function scheduleWelcomeAudio(delay = 5000) {
   clearWelcomeTimer();
-  if (!soundEnabled || gameInProgress) return;
+  if (!soundEnabled) return;
   welcomeTimer = window.setTimeout(() => {
     welcomeTimer = null;
     playWelcomeAudio();
   }, delay);
-}
-
-function beginGameplay() {
-  if (gameInProgress) return;
-  gameInProgress = true;
-  stopWelcomeAudio();
-}
-
-function enterIdleWelcome(delay = 10000) {
-  gameInProgress = false;
-  scheduleWelcomeAudio(delay);
 }
 
 function setMode(nextMode) {
@@ -541,7 +529,6 @@ function renderTools() {
         suppressToolClick = false;
         return;
       }
-      beginGameplay();
       playSound("tool");
       selectedToolId = button.dataset.toolId;
       const tool = getTool(selectedToolId);
@@ -646,7 +633,6 @@ function handlePestClick(pestId) {
 function startToolDrag(event, tool) {
   if (roundClosed || feedbackLocked || event.button > 0) return;
 
-  beginGameplay();
   selectedToolId = tool.id;
   renderToolInfo(tool);
   toolList.querySelectorAll(".tool-button").forEach((button) => {
@@ -772,8 +758,6 @@ function processAttempt(toolId, pestId) {
 
   const pest = activePests.find((item) => item.id === pestId);
   if (!pest) return;
-
-  beginGameplay();
 
   if (!toolId) {
     message.textContent = "先选择一个工具吧";
@@ -910,7 +894,6 @@ function showStageCompleted() {
     primaryDialogButton.textContent = isLastAutoStage ? "重新开始" : "下一步";
     primaryDialogButton.onclick = () => {
       stageDialog.close();
-      beginGameplay();
       if (isLastAutoStage) {
         completedStageIds = new Set();
         startStage(0);
@@ -921,14 +904,12 @@ function showStageCompleted() {
     secondaryDialogButton.textContent = "再玩本关";
     secondaryDialogButton.onclick = () => {
       stageDialog.close();
-      beginGameplay();
       startStage(currentStageIndex);
     };
   } else {
     primaryDialogButton.textContent = "再玩本关";
     primaryDialogButton.onclick = () => {
       stageDialog.close();
-      beginGameplay();
       startStage(currentStageIndex);
     };
     secondaryDialogButton.textContent = "返回关卡选择";
@@ -937,7 +918,6 @@ function showStageCompleted() {
       message.textContent = "请选择想练习的水稻阶段。";
     };
   }
-  enterIdleWelcome(10000);
   stageDialog.showModal();
 }
 
@@ -955,7 +935,6 @@ function showStageFailed() {
   primaryDialogButton.textContent = "再试一次";
   primaryDialogButton.onclick = () => {
     stageDialog.close();
-    beginGameplay();
     startStage(currentStageIndex);
   };
   secondaryDialogButton.textContent = mode === "manual" ? "返回关卡选择" : "留在本关";
@@ -966,7 +945,6 @@ function showStageFailed() {
     renderTools();
     renderPests();
   };
-  enterIdleWelcome(10000);
   stageDialog.showModal();
 }
 
@@ -1015,16 +993,16 @@ collapseLeftPanel.addEventListener("click", () => {
 soundToggle.addEventListener("click", () => {
   soundEnabled = !soundEnabled;
   renderSoundState();
-  if (soundEnabled && !gameInProgress) scheduleWelcomeAudio(0);
+  if (soundEnabled) scheduleWelcomeAudio(0);
 });
-welcomeAudio.addEventListener("ended", () => scheduleWelcomeAudio(10000));
+welcomeAudio.addEventListener("ended", () => scheduleWelcomeAudio(5000));
 document.addEventListener(
   "pointerdown",
   () => {
-    if (soundEnabled && !gameInProgress && welcomeAudio.paused) scheduleWelcomeAudio(0);
+    if (soundEnabled && welcomeAudio.paused) scheduleWelcomeAudio(0);
   },
   { once: true }
 );
 
 startStage(0);
-enterIdleWelcome(0);
+scheduleWelcomeAudio(0);

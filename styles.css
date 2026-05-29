@@ -532,8 +532,8 @@ button {
 }
 
 .tool-info {
-  height: 150px;
-  overflow: auto;
+  min-height: 150px;
+  overflow: visible;
   margin-bottom: 12px;
   padding: 12px;
   border-radius: 8px;
