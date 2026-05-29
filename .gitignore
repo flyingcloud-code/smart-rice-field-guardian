@@ -1,6 +1,8 @@
 node_modules/
 dist/
 output/
+assets/images/**/*.png
+pictures/
 .DS_Store
 *.log
 
