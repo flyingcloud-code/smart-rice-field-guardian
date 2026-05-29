@@ -1,0 +1,17 @@
+node_modules/
+.git/
+.vercel/
+.wrangler/
+output/
+docs/
+assets/images/**/*.png
+.DS_Store
+*.log
+README.md
+package.json
+package-lock.json
+vercel.json
+.gitignore
+.vercelignore
+.assetsignore
+wrangler.jsonc
