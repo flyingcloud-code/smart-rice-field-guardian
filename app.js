@@ -2,42 +2,42 @@ const tools = [
   {
     id: "insecticide-sprayer",
     name: "喷雾器（驱虫药液）",
-    image: "assets/images/tools/insecticide-sprayer.png",
+    image: "assets/images/tools/insecticide-sprayer.webp",
     description: "把驱虫药液均匀喷到稻株上，适合处理会吸食汁液的小虫。",
     targets: ["稻飞虱"]
   },
   {
     id: "net",
     name: "捕虫网",
-    image: "assets/images/tools/net.png",
+    image: "assets/images/tools/net.webp",
     description: "用网捕捉或清理较大的害虫，适合会啃食叶片、茎秆或稻穗的虫害。",
     targets: ["稻水象甲", "稻螟虫", "稻纵卷叶螟"]
   },
   {
     id: "sticky-board",
     name: "粘虫板",
-    image: "assets/images/tools/sticky-board.png",
+    image: "assets/images/tools/sticky-board.webp",
     description: "利用黄色粘板吸引并粘住小型飞虫，适合观察和减少小虫数量。",
     targets: ["稻蓟马", "稻叶蝉"]
   },
   {
     id: "fungicide-sprayer",
     name: "杀菌喷雾器",
-    image: "assets/images/tools/fungicide-sprayer.png",
+    image: "assets/images/tools/fungicide-sprayer.webp",
     description: "喷洒杀菌药液，适合处理由病菌引起的叶片、茎秆或稻穗病害。",
     targets: ["稻瘟病", "穗颈瘟", "白叶枯病"]
   },
   {
     id: "rake",
     name: "除草耙",
-    image: "assets/images/tools/rake.png",
+    image: "assets/images/tools/rake.webp",
     description: "清理田间杂草和病叶，帮助稻田通风，减少病害继续扩散。",
     targets: ["纹枯病"]
   },
   {
     id: "disease-shovel",
     name: "病害清理铲",
-    image: "assets/images/tools/disease-shovel.png",
+    image: "assets/images/tools/disease-shovel.webp",
     description: "小心剔除已经明显患病的稻穗或病部，避免病害继续传播。",
     targets: ["稻曲病"]
   }
@@ -49,7 +49,7 @@ const pests = {
     name: "稻蓟马",
     pinyin: "dào jì mǎ",
     toolId: "sticky-board",
-    image: "assets/images/pests/thrips.png",
+    image: "assets/images/pests/thrips.webp",
     intro: "稻蓟马喜欢吸食嫩叶汁液，幼苗叶片会出现发白、卷曲或长得慢。",
     control: "用粘虫板监测和诱捕小虫，严重时配合老师讲解的安全防治方法。"
   },
@@ -58,7 +58,7 @@ const pests = {
     name: "稻飞虱",
     pinyin: "dào fēi shī",
     toolId: "insecticide-sprayer",
-    image: "assets/images/pests/planthopper.png",
+    image: "assets/images/pests/planthopper.webp",
     intro: "稻飞虱常聚在稻株下部吸汁，数量多时会让稻株变黄、变弱。",
     control: "使用喷雾器均匀处理稻株下部，重点让药液到达虫子聚集的位置。"
   },
@@ -67,7 +67,7 @@ const pests = {
     name: "稻水象甲",
     pinyin: "dào shuǐ xiàng jiǎ",
     toolId: "net",
-    image: "assets/images/pests/water-weevil.png",
+    image: "assets/images/pests/water-weevil.webp",
     intro: "稻水象甲会啃食嫩叶，幼虫还会伤害稻根，让秧苗长势变差。",
     control: "用捕虫网清理成虫，并观察田边和水面附近的稻苗。"
   },
@@ -76,7 +76,7 @@ const pests = {
     name: "稻螟虫",
     pinyin: "dào míng chóng",
     toolId: "net",
-    image: "assets/images/pests/borer.png",
+    image: "assets/images/pests/borer.webp",
     intro: "稻螟虫幼虫会钻进稻秆里取食，可能造成枯心苗或白穗。",
     control: "用捕虫网清除可见虫体，并重点检查受害茎秆附近。"
   },
@@ -85,7 +85,7 @@ const pests = {
     name: "稻瘟病",
     pinyin: "dào wēn bìng",
     toolId: "fungicide-sprayer",
-    image: "assets/images/pests/blast.png",
+    image: "assets/images/pests/blast.webp",
     intro: "稻瘟病常在叶片上形成梭形病斑，严重时会影响稻株生长。",
     control: "使用杀菌喷雾器处理病斑区域，防止病害继续扩散。"
   },
@@ -94,7 +94,7 @@ const pests = {
     name: "稻纵卷叶螟",
     pinyin: "dào zòng juǎn yè míng",
     toolId: "net",
-    image: "assets/images/pests/leaf-folder.png",
+    image: "assets/images/pests/leaf-folder.webp",
     intro: "稻纵卷叶螟会把叶片卷起来并在里面取食，叶片会出现白色伤痕。",
     control: "用捕虫网处理可见幼虫，并注意检查卷起来的叶片。"
   },
@@ -103,7 +103,7 @@ const pests = {
     name: "纹枯病",
     pinyin: "wén kū bìng",
     toolId: "rake",
-    image: "assets/images/pests/sheath-blight.png",
+    image: "assets/images/pests/sheath-blight.webp",
     intro: "纹枯病常出现在稻株下部叶鞘，形成云纹状病斑，密植潮湿时更明显。",
     control: "用除草耙清理病叶杂草，帮助稻田通风，并配合药剂防治。"
   },
@@ -112,7 +112,7 @@ const pests = {
     name: "稻叶蝉",
     pinyin: "dào yè chán",
     toolId: "sticky-board",
-    image: "assets/images/pests/leafhopper.png",
+    image: "assets/images/pests/leafhopper.webp",
     intro: "稻叶蝉会跳会飞，也会吸食叶片汁液，让叶片变黄或出现斑点。",
     control: "用粘虫板诱捕小型飞虫，帮助减少稻田里的虫量。"
   },
@@ -121,7 +121,7 @@ const pests = {
     name: "白叶枯病",
     pinyin: "bái yè kū bìng",
     toolId: "fungicide-sprayer",
-    image: "assets/images/pests/bacterial-blight.png",
+    image: "assets/images/pests/bacterial-blight.webp",
     intro: "白叶枯病会让叶尖和叶缘出现黄白色枯斑，严重时大片叶子枯黄。",
     control: "使用杀菌喷雾器处理病叶区域，并提醒不要让病叶接触更多健康稻株。"
   },
@@ -130,7 +130,7 @@ const pests = {
     name: "穗颈瘟",
     pinyin: "suì jǐng wēn",
     toolId: "fungicide-sprayer",
-    image: "assets/images/pests/neck-blast.png",
+    image: "assets/images/pests/neck-blast.webp",
     intro: "穗颈瘟发生在稻穗颈部，可能让稻穗变白、结实变差。",
     control: "使用杀菌喷雾器重点处理稻穗和穗颈部位。"
   },
@@ -139,7 +139,7 @@ const pests = {
     name: "稻曲病",
     pinyin: "dào qū bìng",
     toolId: "disease-shovel",
-    image: "assets/images/pests/false-smut.png",
+    image: "assets/images/pests/false-smut.webp",
     intro: "稻曲病会让部分稻粒变成黄绿色或橙色小球，影响稻穗品质。",
     control: "用病害清理铲剔除明显患病稻穗，减少继续传播。"
   }
@@ -150,7 +150,7 @@ const stages = [
     id: "transplanting",
     name: "插秧期",
     pinyin: "chā yāng qī",
-    image: "assets/images/rice-stages/transplanting.png",
+    image: "assets/images/rice-stages/transplanting.webp",
     summary: "小秧苗刚进入水田，重点观察嫩叶和幼苗受害。",
     pestIds: ["thrips", "water-weevil", "planthopper", "borer", "blast"]
   },
@@ -158,7 +158,7 @@ const stages = [
     id: "tillering",
     name: "分蘖期",
     pinyin: "fēn niè qī",
-    image: "assets/images/rice-stages/tillering.png",
+    image: "assets/images/rice-stages/tillering.webp",
     summary: "秧苗分枝变密，虫害和叶部病害更容易出现。",
     pestIds: ["leaf-folder", "leafhopper", "planthopper", "sheath-blight", "borer"]
   },
@@ -166,7 +166,7 @@ const stages = [
     id: "jointing",
     name: "拔节期",
     pinyin: "bá jié qī",
-    image: "assets/images/rice-stages/jointing.png",
+    image: "assets/images/rice-stages/jointing.webp",
     summary: "稻秆快速长高，重点保护茎秆和叶片。",
     pestIds: ["sheath-blight", "bacterial-blight", "leaf-folder", "borer", "blast"]
   },
@@ -174,7 +174,7 @@ const stages = [
     id: "heading",
     name: "抽穗期",
     pinyin: "chōu suì qī",
-    image: "assets/images/rice-stages/heading.png",
+    image: "assets/images/rice-stages/heading.webp",
     summary: "稻穗开始形成，重点保护稻穗和上部叶片。",
     pestIds: ["neck-blast", "false-smut", "sheath-blight", "leaf-folder", "bacterial-blight"]
   },
@@ -182,7 +182,7 @@ const stages = [
     id: "mature",
     name: "成熟收割期",
     pinyin: "chéng shú shōu gē qī",
-    image: "assets/images/rice-stages/mature.png",
+    image: "assets/images/rice-stages/mature.webp",
     summary: "稻谷成熟前，重点保护产量和稻穗品质。",
     pestIds: ["false-smut", "neck-blast", "planthopper", "sheath-blight", "borer"]
   }
@@ -206,6 +206,7 @@ let challengeSpeed = 5;
 let soundEnabled = true;
 let settingsOpen = false;
 let leftPanelCollapsed = false;
+let gameInProgress = false;
 let selectedToolId = null;
 let currentStageIndex = 0;
 let activePests = [];
@@ -218,6 +219,7 @@ let dragState = null;
 let suppressToolClick = false;
 let movementFrame = null;
 let lastMovementTime = 0;
+let welcomeTimer = null;
 
 const modeButtons = document.querySelectorAll("[data-mode]");
 const interactionModeButtons = document.querySelectorAll("[data-interaction-mode]");
@@ -358,14 +360,49 @@ function playSound(type) {
 }
 
 function playWelcomeAudio() {
-  if (!soundEnabled) return;
+  if (!soundEnabled || gameInProgress) return;
   welcomeAudio.volume = 0.72;
+  welcomeAudio.currentTime = 0;
   const playResult = welcomeAudio.play();
   if (playResult) {
     playResult.catch(() => {
-      message.textContent = "点击小喇叭可以打开欢迎语音。";
+      if (!gameInProgress && soundEnabled) {
+        message.textContent = "点击小喇叭可以打开欢迎语音。";
+      }
     });
   }
+}
+
+function clearWelcomeTimer() {
+  if (!welcomeTimer) return;
+  window.clearTimeout(welcomeTimer);
+  welcomeTimer = null;
+}
+
+function stopWelcomeAudio() {
+  clearWelcomeTimer();
+  welcomeAudio.pause();
+  welcomeAudio.currentTime = 0;
+}
+
+function scheduleWelcomeAudio(delay = 10000) {
+  clearWelcomeTimer();
+  if (!soundEnabled || gameInProgress) return;
+  welcomeTimer = window.setTimeout(() => {
+    welcomeTimer = null;
+    playWelcomeAudio();
+  }, delay);
+}
+
+function beginGameplay() {
+  if (gameInProgress) return;
+  gameInProgress = true;
+  stopWelcomeAudio();
+}
+
+function enterIdleWelcome(delay = 10000) {
+  gameInProgress = false;
+  scheduleWelcomeAudio(delay);
 }
 
 function setMode(nextMode) {
@@ -466,11 +503,7 @@ function renderSoundState() {
   soundIcon.src = soundEnabled ? "assets/images/icons/speaker-on.svg" : "assets/images/icons/speaker-off.svg";
   soundLabel.textContent = soundEnabled ? "欢迎语音开" : "欢迎语音关";
   welcomeAudio.muted = !soundEnabled;
-  if (soundEnabled) {
-    playWelcomeAudio();
-  } else {
-    welcomeAudio.pause();
-  }
+  if (!soundEnabled) stopWelcomeAudio();
 }
 
 function renderStageInfo() {
@@ -508,6 +541,7 @@ function renderTools() {
         suppressToolClick = false;
         return;
       }
+      beginGameplay();
       playSound("tool");
       selectedToolId = button.dataset.toolId;
       const tool = getTool(selectedToolId);
@@ -612,6 +646,7 @@ function handlePestClick(pestId) {
 function startToolDrag(event, tool) {
   if (roundClosed || feedbackLocked || event.button > 0) return;
 
+  beginGameplay();
   selectedToolId = tool.id;
   renderToolInfo(tool);
   toolList.querySelectorAll(".tool-button").forEach((button) => {
@@ -737,6 +772,8 @@ function processAttempt(toolId, pestId) {
 
   const pest = activePests.find((item) => item.id === pestId);
   if (!pest) return;
+
+  beginGameplay();
 
   if (!toolId) {
     message.textContent = "先选择一个工具吧";
@@ -873,6 +910,7 @@ function showStageCompleted() {
     primaryDialogButton.textContent = isLastAutoStage ? "重新开始" : "下一步";
     primaryDialogButton.onclick = () => {
       stageDialog.close();
+      beginGameplay();
       if (isLastAutoStage) {
         completedStageIds = new Set();
         startStage(0);
@@ -883,12 +921,14 @@ function showStageCompleted() {
     secondaryDialogButton.textContent = "再玩本关";
     secondaryDialogButton.onclick = () => {
       stageDialog.close();
+      beginGameplay();
       startStage(currentStageIndex);
     };
   } else {
     primaryDialogButton.textContent = "再玩本关";
     primaryDialogButton.onclick = () => {
       stageDialog.close();
+      beginGameplay();
       startStage(currentStageIndex);
     };
     secondaryDialogButton.textContent = "返回关卡选择";
@@ -897,6 +937,7 @@ function showStageCompleted() {
       message.textContent = "请选择想练习的水稻阶段。";
     };
   }
+  enterIdleWelcome(10000);
   stageDialog.showModal();
 }
 
@@ -914,6 +955,7 @@ function showStageFailed() {
   primaryDialogButton.textContent = "再试一次";
   primaryDialogButton.onclick = () => {
     stageDialog.close();
+    beginGameplay();
     startStage(currentStageIndex);
   };
   secondaryDialogButton.textContent = mode === "manual" ? "返回关卡选择" : "留在本关";
@@ -924,6 +966,7 @@ function showStageFailed() {
     renderTools();
     renderPests();
   };
+  enterIdleWelcome(10000);
   stageDialog.showModal();
 }
 
@@ -972,13 +1015,16 @@ collapseLeftPanel.addEventListener("click", () => {
 soundToggle.addEventListener("click", () => {
   soundEnabled = !soundEnabled;
   renderSoundState();
+  if (soundEnabled && !gameInProgress) scheduleWelcomeAudio(0);
 });
+welcomeAudio.addEventListener("ended", () => scheduleWelcomeAudio(10000));
 document.addEventListener(
   "pointerdown",
   () => {
-    if (soundEnabled && welcomeAudio.paused) playWelcomeAudio();
+    if (soundEnabled && !gameInProgress && welcomeAudio.paused) scheduleWelcomeAudio(0);
   },
   { once: true }
 );
 
 startStage(0);
+enterIdleWelcome(0);
